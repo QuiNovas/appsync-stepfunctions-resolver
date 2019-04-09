@@ -34,7 +34,7 @@ def _operation(event):
         raise ValueError('operation {} not supported'.format(event['operation']))
 
 def _describe_execution(executionArn):
-    response = client.describe_execution(
+    response = CLIENT.describe_execution(
         executionArn=executionArn
     )
     response['startDate'] = response['startDate'].isoformat()
