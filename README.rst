@@ -9,8 +9,8 @@ returns data about AWS StepFunctions
 
 AWS Permissions Required
 ------------------------
-- sfn:DescribeExecution
-- sfn:StopExecution
+- states:DescribeExecution
+- states:StopExecution
 
 Handler Method
 --------------
@@ -24,7 +24,7 @@ Request Syntax
 
 
   {
-    "operation": "getExecution",
+    "operation": "describeExecution",
     "arguments": {
       "executionArn": "arn"
     }
@@ -40,9 +40,9 @@ Request Syntax
   }
 
 **operation** - REQUIRED
-  Can be one of ``getExecution`` or ``stopExecution``.
+  Can be one of ``describeExecution`` or ``stopExecution``.
 
-**getExecution**
+**describeExecution**
   :executionArn: The Amazon Resource Name (ARN) of the execution to describe - REQUIRED
 
 **stopExecution**
@@ -55,7 +55,7 @@ from Appsync.
 
 Response syntax
 ---------------
-For ``getExecution`` and ``stopExecution``:
+For ``describeExecution`` and ``stopExecution``:
 
 .. code::
 
@@ -68,17 +68,39 @@ For ``getExecution`` and ``stopExecution``:
     'stopDate': datetime(2015, 1, 1),
     'input': 'string',
     'output': 'string'
-}
+  }
 
 Example AWS Appsync schema:
 ---------------------------
 
 .. code::
 
-pass
+  type Execution {
+    executionArn: String!
+    stateMachineArn: String!
+    name: String!
+    status: String!
+    startDate: AWSDateTime!
+    stopDate: AWSDateTime!
+    input: String!
+    output: String
+  }
+
+  type Mutation {
+    stopExecution(executionArn: String!, error: String, cause: String): Execution
+  }
+
+  type Query {
+    describeExecution(executionArn: String!): Execution
+  }
+
+  schema {
+    query: Query
+    mutation: Mutation
+  }
 
 Lambda Package Location
 -----------------------
-pass
+https://s3.amazonaws.com/lambdalambdalambda-repo/quinovas/appsync-stepfunctions-resolver/appsync-stepfunctions-resolver-0.0.1.zip
 
 License: `APL2`_

@@ -21,7 +21,7 @@ def handler(event, context):
 		raise ValueError('Event type {} is not supported'.format(type(event)))
 
 def _operation(event):
-    if event['operation'] == 'getExecution':
+    if event['operation'] == 'describeExecution':
         return _describe_execution(event['arguments']['executionArn'])
     elif event['operation'] == 'stopExecution':
         CLIENT.stop_execution(
@@ -39,4 +39,6 @@ def _describe_execution(executionArn):
     )
     response['startDate'] = response['startDate'].isoformat()
     response['stopDate'] = response['stopDate'].isoformat()
+    if 'ResponseMetadata' in response:
+        del response['ResponseMetadata']
     return response
